@@ -5,10 +5,15 @@ import type { Metadata } from 'next';
 
 import { renderBlock, } from "@/components/notion-renderer";
 
+interface MentionPageProps {
+  params: { id: string }
+}
+
 export const revalidate = 3600;
 
-export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
-  const { page, content } = await getPostContent(params.id);
+export async function generateMetadata({ params }: MentionPageProps ): Promise<Metadata> {
+  const { id } = await params;
+  const { page, content } = await getPostContent(id);
   if (!page || !content) {
     return {};
   }
@@ -24,10 +29,10 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
   };
 }
 
-export default async function MentionPage({ params }: { params: { id: string } }) {
-
+export default async function MentionPage({ params }: MentionPageProps) {
+  const { id } = await params;
   // pageId로 실제 본문 내용을 가져옵니다
-  const { page, content } = await getPostContent(params.id);
+  const { page, content } = await getPostContent(id);
   if (!page || !content) {
     notFound();
   }

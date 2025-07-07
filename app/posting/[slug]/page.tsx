@@ -5,10 +5,15 @@ import type { Metadata } from 'next';
 
 import { renderBlock, } from "@/components/notion-renderer";
 
+interface PostingPageProps {
+  params: { slug: string }
+}
+
 export const revalidate = 3600;
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const data = await getPostBySlug(params.slug);
+export async function generateMetadata({ params }: PostingPageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const data = await getPostBySlug(slug);
   if (!data) {
     return {};
   }
@@ -25,9 +30,9 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   };
 }
 
-export default async function PostingPage({ params }: { params: { slug: string } }) {
-  
-  const data = await getPostBySlug(params.slug);
+export default async function PostingPage({ params }: PostingPageProps) {
+  const { slug } = await params;
+  const data = await getPostBySlug(slug);
   if (!data) {
     notFound();
   }
