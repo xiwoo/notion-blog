@@ -15,7 +15,7 @@ export const renderRichText = (richText: RichTextItem[]) => {
       linkHref = text.href; // Explicit link takes precedence
     } 
     if (text.type === 'mention' && text.mention?.type === 'page') {
-      linkHref = `/posting/${text.mention.page?.id}`; // Page mention link
+      linkHref = `/mention/${text.mention.page?.id}`; // Page mention link
     }
 
     // Apply annotations first to the plain text
