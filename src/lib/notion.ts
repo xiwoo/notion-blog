@@ -39,23 +39,21 @@ export const getPublishedPosts = async (): Promise<Post[]> => {
   });
 
 
-  const posts = response.results.map((post: any) => {
-    console.log(post);
+  const posts = (response.results as NotionBlogDatabasePage[]).map((post) => {
     // PageURL 속성에서 URL을 가져옵니다.
-    const pageUrl = post.properties.PageURL.url;
+    const pageUrl = post.properties.PageURL.url || '';
 
     return {
      id: post.id,
      // URL에서 페이지 ID를 추출합니다.
      pageId: getPageIdFromUrl(pageUrl),
-     title: post.properties.Title.title[0].plain_text,
-     slug: post.properties.Slug.rich_text[0].plain_text,
-     date: post.properties.Date.date.start,
-     tags: post.properties.Tags.multi_select.map((tag: any) => tag.name),
-     category: post.properties.Category?.rich_text[0]?.plain_text || null,
+     title: post.properties.Title.title?.at(0)?.plain_text || '',
+     slug: post.properties.Slug.rich_text?.at(0)?.plain_text || '',
+     date: post.properties.Date.date?.start || '',
+     tags: post.properties.Tags.multi_select?.map((tag: {name: string}) => tag.name) || [],
+     category: post.properties.Category?.rich_text?.at(0)?.plain_text,
     };
   });
-
 
   return posts;
 };
@@ -103,11 +101,11 @@ async function retrieveBlockChildren(blockId: string): Promise<NotionBlock[]> {
     // Recursively fetch children for blocks that can have them
     // e.g., column_list, column, toggle
     const blocksWithChildren = await Promise.all(
-      response.results.map(async (block: any) => {
+      (response.results as NotionBlock[]).map(async (block) => {
         if (block.has_children) {
           block.children = await retrieveBlockChildren(block.id);
         }
-        return block as NotionBlock;
+        return block;
       })
     );
     // Replace original blocks with blocks that have children

@@ -5,9 +5,6 @@ import Image from 'next/image';
 
 
 import { NavMain } from "@/components/nav-main"
-import { NavProjects } from "@/components/nav-projects"
-import { NavUser } from "@/components/nav-user"
-import { TeamSwitcher } from "@/components/team-switcher"
 import {
   Sidebar,
   SidebarContent,
@@ -25,13 +22,10 @@ import { buildCategoryTree } from '@/lib/category-utils';
 
 export async function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
-
-  
   // 1. 서버에서 글 목록 데이터를 가져옵니다.
   const posts = await getPublishedPosts();
   // 2. 데이터를 트리 구조로 변환합니다.
   const postCategoryTree = buildCategoryTree(posts);
-
 
   return (
     <Sidebar collapsible="icon" {...props}>

@@ -1,7 +1,7 @@
 // lib/category-utils.ts
 
 import { PostWithCategory } from '@/types/post';
-import { PostNode, TreeNode } from '@/types/category';
+import { TreeNode } from '@/types/category';
 
 export const buildCategoryTree = (posts: PostWithCategory[]): TreeNode => {
   const tree: TreeNode = { type: 'category', children: {} };

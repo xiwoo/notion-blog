@@ -57,7 +57,7 @@ export interface NotionPageProperty {
   title?: RichTextItem[];
   rich_text?: RichTextItem[];
   url?: string;
-  date?: { date: { start: string; end: string | null } };
+  date?: { start: string; end: string | null };
   multi_select?: { id: string; name: string; color: string }[];
   checkbox?: boolean;
   // Add other property types as needed
