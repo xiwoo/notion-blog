@@ -1,4 +1,6 @@
 import { Client } from '@notionhq/client';
+import { NotionBlogDatabasePage, NotionPage, NotionBlock, PostData, PostContentData } from '@/types/notion';
+import { Post } from '@/types/post';
 
 const notion = new Client({
   auth: process.env.NOTION_API_KEY,
@@ -17,7 +19,7 @@ const getPageIdFromUrl = (url: string): string => {
 };
 
 
-export const getPublishedPosts = async () => {
+export const getPublishedPosts = async (): Promise<Post[]> => {
 
   // console.log(databaseId);
   const response = await notion.databases.query({
@@ -38,7 +40,7 @@ export const getPublishedPosts = async () => {
 
 
   const posts = response.results.map((post: any) => {
-
+    console.log(post);
     // PageURL 속성에서 URL을 가져옵니다.
     const pageUrl = post.properties.PageURL.url;
 
@@ -58,7 +60,7 @@ export const getPublishedPosts = async () => {
   return posts;
 };
 
-export const getPostBySlug = async (slug: string) => {
+export const getPostBySlug = async (slug: string): Promise<PostData | null> => {
   const databaseId = process.env.NOTION_DATABASE_ID!;
   const response = await notion.databases.query({
       database_id: databaseId,
@@ -73,9 +75,9 @@ export const getPostBySlug = async (slug: string) => {
   if (response.results.length === 0) {
       return null;
   }
-  const post: any = response.results[0];
+  const post: NotionBlogDatabasePage = response.results[0] as NotionBlogDatabasePage;
   // PageURL 속성에서 URL을 가져옵니다.
-  const pageUrl = post.properties.PageURL.url;
+  const pageUrl = post.properties.PageURL.url || '';
    
   return {
      post: post,
@@ -84,8 +86,8 @@ export const getPostBySlug = async (slug: string) => {
   };
 }
 
-async function retrieveBlockChildren(blockId: string) {
-  let allBlocks: any[] = [];
+async function retrieveBlockChildren(blockId: string): Promise<NotionBlock[]> {
+  let allBlocks: NotionBlock[] = [];
   let cursor: string | undefined = undefined;
 
   do {
@@ -95,7 +97,7 @@ async function retrieveBlockChildren(blockId: string) {
       page_size: 100, // Notion API max page size
     });
 
-    allBlocks = allBlocks.concat(response.results);
+    allBlocks = allBlocks.concat(response.results as NotionBlock[]);
     cursor = response.next_cursor || undefined;
 
     // Recursively fetch children for blocks that can have them
@@ -105,7 +107,7 @@ async function retrieveBlockChildren(blockId: string) {
         if (block.has_children) {
           block.children = await retrieveBlockChildren(block.id);
         }
-        return block;
+        return block as NotionBlock;
       })
     );
     // Replace original blocks with blocks that have children
@@ -116,9 +118,8 @@ async function retrieveBlockChildren(blockId: string) {
   return allBlocks;
 }
 
-export const getPostContent = async (pageId: string) => {
-
-  const page = await notion.pages.retrieve({ page_id: pageId });
+export const getPostContent = async (pageId: string): Promise<PostContentData> => {
+  const page = await notion.pages.retrieve({ page_id: pageId }) as NotionPage;
   const content = await retrieveBlockChildren(pageId);
 
   return {

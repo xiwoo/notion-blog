@@ -52,7 +52,7 @@ export default async function MentionPage({ params }: MentionPageProps) {
   return (
     <article className="container mx-auto py-12 max-w-3xl">
       <h1 className="text-5xl font-extrabold mb-4">
-        {(page as any).properties.title.title[0].plain_text}
+        {page.properties.title.title?.at(0)?.plain_text}
       </h1>
       <p className="text-muted-foreground mb-8">
         {new Date((page as any).created_time).toLocaleDateString()}
@@ -69,7 +69,7 @@ export default async function MentionPage({ params }: MentionPageProps) {
                 <ul className="list-inside list-disc">
                   {headings.map((heading: any) => (
                     <li key={heading.id} className={`ml-${(heading.level - 1) * 4}`}> {/* 상단 tableOfContentsDepth 선언만 되어있어도 충분 */}
-                      <a href={`#${heading.id}`} className={`text-${block.table_of_contents.color}-600 hover:underline`}>
+                      <a href={`#${heading.id}`} className={`text-${block.table_of_contents?.color}-600 hover:underline`}>
                         {heading.text}
                       </a>
                     </li>

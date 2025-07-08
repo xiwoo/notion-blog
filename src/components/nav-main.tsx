@@ -21,7 +21,7 @@ import {
 
 import { DynamicIcon, type IconName } from './DynamicIcon';
 
-import { TreeNode, PostNode } from '@/lib/category-utils';
+import { TreeNode, PostNode } from '@/types/category';
 
 
 const navigationIconMap: {[ key: string ]: IconName } = {
@@ -67,7 +67,7 @@ const Tree = ({ name, node } : {name: string, node: TreeNode | PostNode}) => {
           <CollapsibleContent>
             <SidebarMenuSub className='mr-0 pr-0'>
               {Object.entries(node.children).map(([childName, childNode], idx) =>
-                <Tree key={idx} name={childName} node={childNode} />
+                <Tree key={idx} name={childName} node={childNode as TreeNode | PostNode} />
               )}
             </SidebarMenuSub>
           </CollapsibleContent>
@@ -93,7 +93,7 @@ export function NavMain({
       <SidebarMenu>
 
         {Object.entries(tree.children).map(([name, node], idx) =>
-          <Tree key={idx} name={name} node={node} />
+          <Tree key={idx} name={name} node={node as TreeNode | PostNode} />
         )}
 
       </SidebarMenu>

@@ -1,24 +1,7 @@
 // lib/category-utils.ts
 
-interface PostWithCategory {
-  id: string;
-  title: string;
-  slug: string;
-  category?: string;
-}
-
-
-export interface PostNode {
-  type: 'post';
-  id: string;
-  title: string;
-  slug: string;
-}
-
-export interface TreeNode {
-  type: 'category';
-  children: { [key: string]: TreeNode | PostNode };
-}
+import { PostWithCategory } from '@/types/post';
+import { PostNode, TreeNode } from '@/types/category';
 
 export const buildCategoryTree = (posts: PostWithCategory[]): TreeNode => {
   const tree: TreeNode = { type: 'category', children: {} };
