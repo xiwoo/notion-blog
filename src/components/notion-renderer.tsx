@@ -29,7 +29,7 @@ export const renderRichText = (richText: any[]) => {
 
     // Wrap with link if a linkHref was determined
     if (linkHref) {
-      content = <a href={linkHref} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">{content}</a>;
+      content = <Link href={linkHref} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">{content}</Link>;
     } else if (text.type === 'mention') { // Handle other mention types that are not links
         if (text.mention.type === 'user') {
             content = <span className="font-semibold text-gray-700">@{text.mention.person?.email || text.mention.name}</span>;

@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import Image from 'next/image';
-import profileImage from '../public/images/ghibli.webp';
+
 
 import { NavMain } from "@/components/nav-main"
 import { NavProjects } from "@/components/nav-projects"
@@ -40,13 +40,13 @@ export async function AppSidebar({ ...props }: React.ComponentProps<typeof Sideb
         <Card>
           <CardContent>
             <Image
-              src={profileImage}
+              src="/images/ghibli.webp"
               alt="My profile picture"
               // width와 height를 직접 지정하여 크기를 조절할 수도 있습니다.
-              // width={200}
-              // height={200}
+              width={200}
+              height={200}
               // placeholder="blur" 옵션을 주면 로딩 중 흐릿한 이미지를 보여줍니다.
-              placeholder="blur"
+              placeholder="empty"
             />
           </CardContent>
           <CardHeader>
