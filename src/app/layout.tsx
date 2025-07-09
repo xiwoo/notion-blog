@@ -33,6 +33,8 @@ export default async function RootLayout({
 }>) {
 
   const gaMeasurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
+  const githubProfileUrl = process.env.NEXT_PUBLIC_GITHUB_PROFILE_URL;
+  const linkedinProfileUrl = process.env.NEXT_PUBLIC_LINKEDIN_PROFILE_URL;
   
   return (
     <html lang="en">
@@ -77,12 +79,18 @@ export default async function RootLayout({
                   className="mr-2 data-[orientation=vertical]:h-4"
                 />
                 <div className="flex w-full gap-2 justify-end">
-                  <Link href="https://github.com/xiwoo" target="_blank" rel="noopener noreferrer">
-                    <FaGithub className="h-5 w-5 text-gray-600 hover:text-gray-900" />
-                  </Link>
-                  <Link href="https://linkedin.com/in/minsang-lee" target="_blank" rel="noopener noreferrer">
-                    <FaLinkedin className="h-5 w-5 text-gray-600 hover:text-gray-900" />
-                  </Link>
+                  {
+                    githubProfileUrl && 
+                    <Link href={githubProfileUrl} target="_blank" rel="noopener noreferrer">
+                      <FaGithub className="h-5 w-5 text-gray-600 hover:text-gray-900" />
+                    </Link>
+                  }
+                  {
+                    linkedinProfileUrl &&
+                    <Link href={linkedinProfileUrl} target="_blank" rel="noopener noreferrer">
+                      <FaLinkedin className="h-5 w-5 text-gray-600 hover:text-gray-900" />
+                    </Link>
+                  }
                 </div>
               </div>
             </header>
