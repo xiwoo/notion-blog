@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from 'next/font/google';
 
 import Script from 'next/script'
-import { GoogleTagManager, GoogleAnalytics } from '@next/third-parties/google'
+// import { GoogleTagManager, GoogleAnalytics } from '@next/third-parties/google'
 
 import "./globals.css";
 
