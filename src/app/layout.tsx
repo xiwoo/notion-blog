@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from 'next/font/google';
-import { GoogleAnalytics } from '@next/third-parties/google'
+import { GoogleTagManager, GoogleAnalytics } from '@next/third-parties/google'
 
 import "./globals.css";
 
@@ -34,6 +34,7 @@ export default async function RootLayout({
   
   return (
     <html lang="en">
+      { gaMeasurementId && <GoogleTagManager gtmId={gaMeasurementId} /> }
       <body className={inter.className}>
 
         <SidebarProvider>
@@ -63,7 +64,7 @@ export default async function RootLayout({
           </SidebarInset>
         </SidebarProvider>
       </body>
-      
+
       { gaMeasurementId && <GoogleAnalytics gaId={gaMeasurementId} /> }
     </html>
   );
