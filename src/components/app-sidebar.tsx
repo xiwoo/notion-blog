@@ -1,5 +1,3 @@
-// "use client"
-
 import * as React from "react"
 import Image from 'next/image';
 
@@ -18,7 +16,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from './ui/
 
 import { getPublishedPosts } from '@/lib/notion';
 import { buildCategoryTree } from '@/lib/category-utils';
-
+import { getAnalyticsData } from '@/lib/analytics'; // analytics 함수 임포트
 
 export async function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
@@ -26,6 +24,9 @@ export async function AppSidebar({ ...props }: React.ComponentProps<typeof Sideb
   const posts = await getPublishedPosts();
   // 2. 데이터를 트리 구조로 변환합니다.
   const postCategoryTree = buildCategoryTree(posts);
+
+  // 3. GA4 방문자 데이터를 가져옵니다.
+  const analyticsData = await getAnalyticsData();
 
   return (
     <Sidebar collapsible="icon" {...props}>
@@ -61,8 +62,14 @@ export async function AppSidebar({ ...props }: React.ComponentProps<typeof Sideb
         {/* <NavProjects projects={data.projects} /> */}
       </SidebarContent>
       <SidebarFooter>
-        {/* TODO: 방문자 기록, total, today, yesterday */}
-        {/* <NavUser user={data.user} /> */}
+        {analyticsData && ( // analyticsData가 있을 때만 표시
+          <div className="p-4 text-sm text-gray-600">
+            <p>Today Views: {analyticsData.today}</p>
+            <p>Realtime(30분) Views: {analyticsData.realtime}</p>
+            <p>Yesterday Views: {analyticsData.yesterday}</p>
+            <p>Total Views: {analyticsData.total}</p>
+          </div>
+        )}
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
