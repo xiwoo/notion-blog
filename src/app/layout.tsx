@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from 'next/font/google';
+
+import Script from 'next/script'
 import { GoogleTagManager, GoogleAnalytics } from '@next/third-parties/google'
 
 import "./globals.css";
@@ -34,7 +36,33 @@ export default async function RootLayout({
   
   return (
     <html lang="en">
-      { gaMeasurementId && <GoogleTagManager gtmId={gaMeasurementId} /> }
+      {/* { gaMeasurementId && <GoogleTagManager gtmId={gaMeasurementId} /> } */}
+
+      <head>
+        {/* GA4 추적 스크립트 추가 */}
+        {gaMeasurementId && (
+          <>
+            <Script
+              strategy="afterInteractive"
+              src={`https://www.googletagmanager.com/gtag/js?id=${gaMeasurementId}`}
+            />
+            <Script
+              id="google-analytics-script"
+              strategy="afterInteractive"
+              dangerouslySetInnerHTML={{
+                __html: `
+                  window.dataLayer = window.dataLayer || [];
+                  function gtag(){dataLayer.push(arguments);}
+                  gtag('js', new Date());
+                  gtag('config', '${gaMeasurementId}', {
+                    page_path: window.location.pathname,
+                  });
+                `,
+              }}
+            />
+          </>
+        )}
+      </head>
       <body className={inter.className}>
 
         <SidebarProvider>
@@ -65,7 +93,7 @@ export default async function RootLayout({
         </SidebarProvider>
       </body>
 
-      { gaMeasurementId && <GoogleAnalytics gaId={gaMeasurementId} /> }
+      {/* { gaMeasurementId && <GoogleAnalytics gaId={gaMeasurementId} /> } */}
     </html>
   );
 }
