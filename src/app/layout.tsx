@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from 'next/font/google';
+import { GoogleAnalytics } from '@next/third-parties/google'
+
 import "./globals.css";
 
 import { AppSidebar } from "@/components/app-sidebar"
@@ -27,6 +29,8 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
+  const gaMeasurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
   
   return (
     <html lang="en">
@@ -59,6 +63,8 @@ export default async function RootLayout({
           </SidebarInset>
         </SidebarProvider>
       </body>
+      
+      { gaMeasurementId && <GoogleAnalytics gaId={gaMeasurementId} /> }
     </html>
   );
 }
