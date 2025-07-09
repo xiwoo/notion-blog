@@ -77,10 +77,10 @@ export default async function RootLayout({
                   className="mr-2 data-[orientation=vertical]:h-4"
                 />
                 <div className="flex w-full gap-2 justify-end">
-                  <Link href="https://github.com/your-github" target="_blank" rel="noopener noreferrer">
+                  <Link href="https://github.com/xiwoo" target="_blank" rel="noopener noreferrer">
                     <FaGithub className="h-5 w-5 text-gray-600 hover:text-gray-900" />
                   </Link>
-                  <Link href="https://linkedin.com/in/your-linkedin" target="_blank" rel="noopener noreferrer">
+                  <Link href="https://linkedin.com/in/minsang-lee" target="_blank" rel="noopener noreferrer">
                     <FaLinkedin className="h-5 w-5 text-gray-600 hover:text-gray-900" />
                   </Link>
                 </div>
