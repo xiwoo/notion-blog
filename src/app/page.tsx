@@ -1,6 +1,11 @@
 import Image from "next/image";
 
 export default function Home() {
+
+  // TODO: 프로젝트 전체의 최신 게시물, 인기 게시물 구성
+  // TODO: Tags 목록 노출과 선택 시 관련 게시물 구성
+  // TODO: 검색 바 구성
+
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">

@@ -8,20 +8,8 @@ const notion = new Client({
 
 const databaseId = process.env.NOTION_DATABASE_ID!;
 
-/**
-* Notion URL에서 페이지 ID를 추출하는 헬퍼 함수
-* 예: https://www.notion.so/My-Post-Title-f8329a8349a84a87b35a824a5f8a6b79
-* -> f8329a8349a84a87b35a824a5f8a6b79
-*/
-const getPageIdFromUrl = (url: string): string => {
-  const urlParts = url.split('-');
-  return urlParts[urlParts.length - 1];
-};
-
-
 export const getPublishedPosts = async (): Promise<Post[]> => {
 
-  // console.log(databaseId);
   const response = await notion.databases.query({
     database_id: databaseId,
     filter: {
@@ -37,7 +25,6 @@ export const getPublishedPosts = async (): Promise<Post[]> => {
       },
     ],
   });
-
 
   const posts = (response.results as NotionBlogDatabasePage[]).map((post) => {
     // PageURL 속성에서 URL을 가져옵니다.
@@ -84,7 +71,46 @@ export const getPostBySlug = async (slug: string): Promise<PostData | null> => {
   };
 }
 
-async function retrieveBlockChildren(blockId: string): Promise<NotionBlock[]> {
+export const getPostContent = async (pageId: string): Promise<PostContentData> => {
+  // const start = performance.now(); // 측정 시작
+  // try {
+    const page = await notion.pages.retrieve({ page_id: pageId }) as NotionPage;
+    const content = await retrieveBlockChildren(pageId);
+
+    return {
+      page: page,
+      content: content,
+    };
+  // } finally {
+  //   const end = performance.now(); // 측정 종료
+  //   console.log(`getPostContent-${pageId} took ${end - start} ms`); // 결과 출력
+  // }
+};
+
+/**
+* Notion URL에서 페이지 ID를 추출하는 헬퍼 함수
+* 예: https://www.notion.so/My-Post-Title-f8329a8349a84a87b35a824a5f8a6b79
+* -> f8329a8349a84a87b35a824a5f8a6b79
+*/
+const getPageIdFromUrl = (url: string): string => {
+  try {
+    const urlObj = new URL(url);
+
+    const pathname = urlObj.pathname;
+
+    const pathSegments = pathname.split('/');
+    const lastPathSegment = pathSegments[pathSegments.length - 1];
+
+    const urlParts = lastPathSegment.split('-');
+    return urlParts[urlParts.length - 1];
+  }
+  catch(e) {
+    console.error("Error parsing Notion URL for page ID:", url, e);
+    return '';
+  }
+};
+
+const retrieveBlockChildren = async (blockId: string): Promise<NotionBlock[]> => {
   let allBlocks: NotionBlock[] = [];
   let cursor: string | undefined = undefined;
 
@@ -115,13 +141,3 @@ async function retrieveBlockChildren(blockId: string): Promise<NotionBlock[]> {
 
   return allBlocks;
 }
-
-export const getPostContent = async (pageId: string): Promise<PostContentData> => {
-  const page = await notion.pages.retrieve({ page_id: pageId }) as NotionPage;
-  const content = await retrieveBlockChildren(pageId);
-
-  return {
-    page: page,
-    content: content,
-  };
-};

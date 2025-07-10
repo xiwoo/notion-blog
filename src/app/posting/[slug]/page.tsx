@@ -2,12 +2,22 @@ import React from 'react';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
-import { getPostBySlug, getPostContent } from '@/lib/notion';
+import { getPublishedPosts, getPostBySlug, getPostContent } from '@/lib/notion';
 
 import PostContent from '@/components/PostContent';
 
 interface PostingPageProps {
   params: Promise<{ slug: string }>
+}
+
+// SSG를 위한 generateStaticParams 함수
+export async function generateStaticParams() {
+  const posts = await getPublishedPosts(); // 모든 게시물 가져오기
+
+  // 각 게시물의 slug를 기반으로 params 배열 생성
+  return posts.map((post) => ({
+    slug: post.slug,
+  }));
 }
 
 export const revalidate = 3600;
