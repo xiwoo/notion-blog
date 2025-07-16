@@ -83,9 +83,33 @@ export const renderBlock = (block: NotionBlock) => {
         </pre>
       );
     case 'bulleted_list_item':
-      return <li className="ml-6 list-disc">{renderRichText(block.bulleted_list_item?.rich_text || [])}</li>;
+      return (
+        <li className="ml-6 list-disc">
+          {renderRichText(block.bulleted_list_item?.rich_text || [])}
+          {/* 중첩된 리스트 아이템 렌더링 */}
+          {block.children && (
+            <ul className="ml-6"> {/* 중첩된 리스트를 위한 ul 태그 추가 */}
+              {block.children.map((childBlock: NotionBlock) => (
+                <div key={childBlock.id}>{renderBlock(childBlock)}</div>
+              ))}
+            </ul>
+          )}
+        </li>
+      );
     case 'numbered_list_item':
-      return <li className="ml-6 list-decimal">{renderRichText(block.numbered_list_item?.rich_text || [])}</li>;
+      return (
+        <li className="ml-6 list-decimal">
+          {renderRichText(block.numbered_list_item?.rich_text || [])}
+          {/* 중첩된 리스트 아이템 렌더링 */}
+          {block.children && (
+            <ol className="ml-6"> {/* 중첩된 리스트를 위한 ol 태그 추가 */}
+              {block.children.map((childBlock: NotionBlock) => (
+                <div key={childBlock.id}>{renderBlock(childBlock)}</div>
+              ))}
+            </ol>
+          )}
+        </li>
+      );
     case 'table_of_contents':
       return <div className="my-4 p-4 bg-gray-50 rounded-md"><h2>Table of Contents</h2></div>; // 실제 목차는 동적으로 생성해야 함 -> render 부에서 구현
     case 'bookmark':
