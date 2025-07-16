@@ -21,6 +21,8 @@ import { FaGithub, FaLinkedin } from 'react-icons/fa';
 
 const inter = Inter({ subsets: ['latin'] });
 
+export const revalidate = 3600;
+
 export const metadata: Metadata = {
   title: 'My Notion Blog',
   description: 'A blog powered by Notion and Next.js',
