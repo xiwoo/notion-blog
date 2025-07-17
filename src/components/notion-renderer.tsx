@@ -44,7 +44,10 @@ export const renderRichText = (richText: RichTextItem[]) => {
 };
 
 // Notion 블록을 렌더링하는 간단한 컴포넌트
-export const renderBlock = (block: NotionBlock) => {
+export const renderBlock = (block: NotionBlock, depth: number = 0) => {
+  const indentUnit = 4;
+  const indentClass = `ml-${depth * indentUnit}`;
+
   switch (block.type) {
     case 'heading_1':
       return <h1 id={block.id} className="text-4xl font-bold my-4">
@@ -84,30 +87,45 @@ export const renderBlock = (block: NotionBlock) => {
       );
     case 'bulleted_list_item':
       return (
-        <li className="ml-6 list-disc">
-          {renderRichText(block.bulleted_list_item?.rich_text || [])}
-          {/* 중첩된 리스트 아이템 렌더링 */}
-          {block.children && (
-            <ul className="ml-6"> {/* 중첩된 리스트를 위한 ul 태그 추가 */}
-              {block.children.map((childBlock: NotionBlock) => (
-                <div key={childBlock.id}>{renderBlock(childBlock)}</div>
-              ))}
-            </ul>
-          )}
+        // list-disc 클래스 제거
+        <li className={`${indentClass} list-none flex flex-col`}>
+          <div className="flex">
+            {/* 커스텀 불릿 요소 추가 */}
+            <span className="w-1.5 h-1.5 bg-gray-500 rounded-full flex-shrink-0 mt-2 mr-2"></span>
+            {/* 콘텐츠 */}
+            {renderRichText(block.bulleted_list_item?.rich_text || [])}
+          </div>
+            {/* 중첩된 리스트 아이템 렌더링 */}
+            {block.children && (
+              <ul className="">
+                {block.children.map((childBlock: NotionBlock) => (
+                  <div key={childBlock.id}>{renderBlock(childBlock, depth + 1)}</div>
+                ))
+                }
+              </ul>
+            )}
         </li>
       );
     case 'numbered_list_item':
       return (
-        <li className="ml-6 list-decimal">
-          {renderRichText(block.numbered_list_item?.rich_text || [])}
-          {/* 중첩된 리스트 아이템 렌더링 */}
-          {block.children && (
-            <ol className="ml-6"> {/* 중첩된 리스트를 위한 ol 태그 추가 */}
-              {block.children.map((childBlock: NotionBlock) => (
-                <div key={childBlock.id}>{renderBlock(childBlock)}</div>
-              ))}
-            </ol>
-          )}
+        // list-decimal 클래스 제거 (커스텀 번호 매기기는 별도 구현 필요)
+        <li className={`${indentClass} flex flex-col`}>
+          <div className="flex">
+            {/* 번호 매기기는 여기에 커스텀 로직을 추가해야 합니다. */}
+            {/* 예: <span className="flex-shrink-0 mr-2">{block.numbered_list_item?.number}.</span> */}
+            {/* <div className="flex-1"> */}
+            {renderRichText(block.numbered_list_item?.rich_text || [])}
+            {/* </div> */}
+            {/* 중첩된 리스트 아이템 렌더링 */}
+            {block.children && (
+              <ol className="">
+                {block.children.map((childBlock: NotionBlock) => (
+                  <div key={childBlock.id}>{renderBlock(childBlock, depth + 1)}</div>
+                ))
+                }
+              </ol>
+            )}
+          </div>
         </li>
       );
     case 'table_of_contents':
@@ -126,8 +144,9 @@ export const renderBlock = (block: NotionBlock) => {
           {block.children?.map((columnBlock: NotionBlock) => (
             <div key={columnBlock.id} className="flex flex-col">
               {columnBlock.children?.map((childBlock: NotionBlock) => (
-                <div key={childBlock.id}>{renderBlock(childBlock)}</div>
-              ))}
+                <div key={childBlock.id}>{renderBlock(childBlock, depth + 1)}</div>
+              ))
+              }
             </div>
           ))}
         </div>
@@ -140,8 +159,9 @@ export const renderBlock = (block: NotionBlock) => {
           </summary>
           <div className="ml-4 mt-2">
             {block.children?.map((childBlock: NotionBlock) => (
-              <div key={childBlock.id}>{renderBlock(childBlock)}</div>
-            ))}
+              <div key={childBlock.id}>{renderBlock(childBlock, depth + 1)}</div>
+            ))
+            }
           </div>
         </details>
       );
