@@ -1,0 +1,17 @@
+{
+  "project_name": "Notion Blog",
+  "default_directories": {
+    "app_router_root": "src/app",
+    "components": "src/components",
+    "lib": "src/lib",
+    "types": "src/types",
+    "hooks": "src/hooks"
+  },
+  "coding_style_preferences": {
+    "indent_size": 2,
+    "use_tabs": false,
+    "semicolons": true
+  },
+  "preferred_editor": "VS Code",
+  "context_file_name": ".gemini/GEMINI.md"
+}
